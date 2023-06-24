@@ -2,56 +2,54 @@ package com.akobir.messenger.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.akobir.messenger.R
 import com.akobir.messenger.adapter.ChatAdapter
+import com.akobir.messenger.fragment.CallsFragment
+import com.akobir.messenger.fragment.ChatsFragment
+import com.akobir.messenger.fragment.PeopleFragment
+import com.akobir.messenger.fragment.StoriesFragment
 import com.akobir.messenger.model.Chat
 import com.akobir.messenger.model.Message
 import com.akobir.messenger.model.Room
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initViews()
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        bottomNavigationView.selectedItemId = R.id.menu_chats
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_chats -> {
+                    replaceFragment(ChatsFragment())
+                    true
+                }
+                R.id.menu_calls -> {
+                    replaceFragment(CallsFragment())
+                    true
+                }
+                R.id.menu_people -> {
+                    replaceFragment(PeopleFragment())
+                    true
+                }
+                R.id.menu_stories -> {
+                    replaceFragment(StoriesFragment())
+                    true
+                }
+                else -> false
+            }
+        }
+        replaceFragment(ChatsFragment())
     }
 
-    private fun initViews() {
-        recyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = GridLayoutManager(this, 1)
-        refreshAdapter(getAllChats())
-    }
-
-    private fun refreshAdapter(chats: ArrayList<Chat>){
-        val adapter = ChatAdapter(this, chats)
-        recyclerView.adapter = adapter
-    }
-
-    private fun getAllChats(): ArrayList<Chat>{
-        val chats: ArrayList<Chat> = ArrayList()
-        val rooms: ArrayList<Room> = ArrayList()
-        rooms.add(Room(R.drawable.im_user_1, "Madison Bear"))
-        rooms.add(Room(R.drawable.im_user_2, "Paige Cooper"))
-        rooms.add(Room(R.drawable.im_user_3, "Gwen Stacy"))
-        rooms.add(Room(R.drawable.im_user_1, "Madison Bear"))
-        rooms.add(Room(R.drawable.im_user_2, "Paige Cooper"))
-        rooms.add(Room(R.drawable.im_user_3, "Gwen Stacy"))
-        rooms.add(Room(R.drawable.im_user_1, "Madison Bear"))
-        rooms.add(Room(R.drawable.im_user_2, "Paige Cooper"))
-        rooms.add(Room(R.drawable.im_user_3, "Gwen Stacy"))
-        chats.add(Chat(rooms))
-        chats.add(Chat(Message(R.drawable.im_user_1, "Madison", true)))
-        chats.add(Chat(Message(R.drawable.im_user_2, "Paige", true)))
-        chats.add(Chat(Message(R.drawable.im_user_3, "Gwen", false)))
-        chats.add(Chat(Message(R.drawable.im_user_1, "Madison", true)))
-        chats.add(Chat(Message(R.drawable.im_user_2, "Paige", false)))
-        chats.add(Chat(Message(R.drawable.im_user_3, "Gwen", false)))
-        chats.add(Chat(Message(R.drawable.im_user_1, "Madison", true)))
-        chats.add(Chat(Message(R.drawable.im_user_2, "Paige", false)))
-        chats.add(Chat(Message(R.drawable.im_user_3, "Gwen", false)))
-        return chats
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }

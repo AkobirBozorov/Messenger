@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_chats"
+        android:icon="@mipmap/ic_chats"
+        android:title="Chats" />
+
+    <item
+        android:id="@+id/menu_calls"
+        android:icon="@mipmap/ic_calls"
+        android:title="Calls" />
+
+    <item
+        android:id="@+id/menu_people"
+        android:icon="@mipmap/ic_people"
+        android:title="People" />
+
+    <item
+        android:id="@+id/menu_stories"
+        android:icon="@mipmap/ic_stories"
+        android:title="Stories" />
+
+
+</menu>
