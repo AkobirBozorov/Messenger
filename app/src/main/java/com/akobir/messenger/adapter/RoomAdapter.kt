@@ -12,32 +12,56 @@ import com.google.android.material.imageview.ShapeableImageView
 
 class RoomAdapter(var context: Context, var items: ArrayList<Room>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val HEADER_VIEW_TYPE = 0
+    private val ROOM_VIEW_TYPE = 1
+
     override fun getItemCount(): Int {
-        return items.size
+        return items.size + 1
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_room_view, parent, false)
-        return RoomViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val room = items[position]
-        if(holder is RoomViewHolder){
-            val iv_profile = holder.iv_profile
-            val tv_fullname = holder.tv_fullname
-            iv_profile.setImageResource(room.profile)
-            tv_fullname.text = room.fullname
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) {
+            HEADER_VIEW_TYPE
+        } else {
+            ROOM_VIEW_TYPE
         }
     }
 
-    class RoomViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == HEADER_VIEW_TYPE) {
+            val headerView = LayoutInflater.from(context).inflate(R.layout.header_layout, parent, false)
+            HeaderViewHolder(headerView)
+        } else {
+            val roomView = LayoutInflater.from(context).inflate(R.layout.item_room_view, parent, false)
+            RoomViewHolder(roomView)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is HeaderViewHolder) {
+            // bind header view data here
+        } else if (holder is RoomViewHolder) {
+            val room = items[position - 1]
+            holder.bind(room)
+        }
+    }
+
+    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        // declare header view widgets here
+    }
+
+    inner class RoomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var iv_profile: ShapeableImageView
         var tv_fullname: TextView
 
         init {
-            iv_profile = view.findViewById(R.id.iv_profile)
-            tv_fullname = view.findViewById(R.id.tv_fullname)
+            iv_profile = itemView.findViewById(R.id.iv_profile)
+            tv_fullname = itemView.findViewById(R.id.tv_fullname)
+        }
+
+        fun bind(room: Room) {
+            iv_profile.setImageResource(room.profile)
+            tv_fullname.text = room.fullname
         }
     }
 }
